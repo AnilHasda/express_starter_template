@@ -31,6 +31,14 @@ const userSchema=new Schema<UserSchema>({
     type:String,
     enum:["admin","user","moderator"],
     default:"user"
+  },
+  otp:String,
+  otpExpiresAt:{
+    type:Date
+  },
+  isVerified:{
+    type:Boolean,
+    default:false
   }
 },{timestamps:true});
 userSchema.pre("save",async function (next){

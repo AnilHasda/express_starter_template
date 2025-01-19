@@ -6,4 +6,7 @@ export interface UserSchema{
   profile?:string;
   refresh_token:string;
   role:string;
+  otp?:string;
+  otpExpiresAt?:Date;
+  isVerified:boolean;
 }

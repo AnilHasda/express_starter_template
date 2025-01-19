@@ -3,7 +3,7 @@ const app=express();
 import {config} from "dotenv";
 import connection from "../src/db/connection";
 import {errorHandler} from "../src/middlewares/errorHandler/errorHandler";
-import authRouter from "../src/routes/authontication.route";
+import authRouter from "../src/routes/authentication.route";
 import cookieParser from "cookie-parser";
  declare global {
   namespace Express {
