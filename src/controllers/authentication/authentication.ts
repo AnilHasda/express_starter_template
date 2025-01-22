@@ -170,9 +170,9 @@ const verifyOtp=asyncHandler(async(req:Request,res:Response,next:NextFunction)=>
   let findUser=await user.findOne({email});
   if(!findUser) return next(new ErrorConfig(401,"unauthorized access"));
   let verifyOtpCode=await bcrypt.compare(req.params.otpCode,findUser.otp as string);
-  console.log({findUser,verifyOtpCode,otpCode:req.params.otpCode})
   if(!verifyOtpCode || !findUser.otpExpiresAt) return next(new ErrorConfig(401,"Invalid code"));
-  let isOtpValid=new Date(Date.now())<new Date(findUser.otpExpiresAt);
+  let isOtpValid=new Date<findUser.otpExpiresAt;
+  console.log({now:new Date,otpExpires:findUser.otpExpiresAt})
   if(!isOtpValid) return next(new ErrorConfig(401,"OTP expires"));
   let verifyAccount=await user.updateOne({otp:req.params.otpCode},{$set:{...findUser,otp:undefined,otpExpiresAt:undefined,isVerified:true}});
   if(verifyAccount){
@@ -199,14 +199,15 @@ const sendOtpAgain=asyncHandler(async(req:Request,res:Response,next:NextFunction
   let otp=generateOtp();
   let hashedOTP=await bcrypt.hash(otp,10);
   let otpExpiresAt=generateOtpExpirationTime();
+  console.log({hashedOTP,otpExpiresAt})
   const updateOtp=await user.updateOne(
     {email},
     {$set:{
-      ...userExist,//userExist contain user data
       otp:hashedOTP,
       otpExpiresAt
     }})
     if(updateOtp?.modifiedCount===0) return next(new ErrorConfig(500,"failed to update OTP"));
+    console.log({updateOtp})
   let templatePath=path.join(__dirname,"../../../views/verificationEmailTemplate.ejs");
     type Data={
       user:string;
