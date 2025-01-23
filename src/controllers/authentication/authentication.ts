@@ -1,4 +1,3 @@
-import {Request,Response,NextFunction} from "express";
 import asyncHandler from "../../helpers/asyncHandler";
 import ErrorConfig from "../../helpers/errorConfig";
 import ResponseConfig from "../../helpers/responseConfig";
@@ -13,7 +12,7 @@ import path from "path";
 import ejs from "ejs";
 import sendEmail from "../../services/email";
 import mongoose from "mongoose";
-const test=asyncHandler(async(req:Request,res:Response,next:NextFunction)=>{
+const test=asyncHandler(async(req,res,next)=>{
   let bool:boolean=true;
   if(bool){
     let response=new ResponseConfig(200,"this is test message");
@@ -22,11 +21,11 @@ const test=asyncHandler(async(req:Request,res:Response,next:NextFunction)=>{
     next(new ErrorConfig(401,"You are not authonticate"));
   // next(new Error())
 });
-const deleteUserModle=asyncHandler(async(req:Request,res:Response,next:NextFunction)=>{
+const deleteUserModle=asyncHandler(async(req,res,next)=>{
   delete mongoose.models["users"];
   res.json(new ResponseConfig(200,"uset model deleted successfully"));
 })
-const userRegistration=asyncHandler(async(req:Request,res:Response,next:NextFunction)=>{
+const userRegistration=asyncHandler(async(req,res,next)=>{
   let userData:UserData=req.body;
   let userDataValues:string[]=Object.values(userData);
   let uploadProfile;
@@ -104,7 +103,7 @@ const userRegistration=asyncHandler(async(req:Request,res:Response,next:NextFunc
   }
   next(new ErrorConfig(400,"Failed to create account"));
 });
-const login=asyncHandler(async(req:Request,res:Response,next:NextFunction)=>{
+const login=asyncHandler(async(req,res,next)=>{
   interface UserData{
     email?:string;
     password?:string;
@@ -146,12 +145,12 @@ const login=asyncHandler(async(req:Request,res:Response,next:NextFunction)=>{
   }
   next(new ErrorConfig(400,"Failed to logged in!!"));
 })
- const loggedOut=asyncHandler(async(req:Request,res:Response,next:NextFunction)=>{
+ const loggedOut=asyncHandler(async(req,res,next)=>{
   res.clearCookie("access_token");
   res.clearCookie("refresh_token");
   res.json(new ResponseConfig(200,"user logged out"));
 })
-const profileUpdate=asyncHandler(async(req:Request,res:Response,next:NextFunction)=>{
+const profileUpdate=asyncHandler(async(req,res,next)=>{
   let email=req.email as string;
   let updateId=req.params.id as string | number;
   let updatePayload=req.body;
@@ -161,11 +160,11 @@ const profileUpdate=asyncHandler(async(req:Request,res:Response,next:NextFunctio
   if(updateUser) return res.status(202).json(new ResponseConfig(202,"updated successfully"));
   next(new ErrorConfig(500,"failed to update profile !!"));
 })
-const getAllUsers=asyncHandler(async(req:Request,res:Response,next:NextFunction)=>{
+const getAllUsers=asyncHandler(async(req,res,next)=>{
   let getUsers=await user.find({});
   res.json(new ResponseConfig(200,null,getUsers));
 })
-const verifyOtp=asyncHandler(async(req:Request,res:Response,next:NextFunction)=>{
+const verifyOtp=asyncHandler(async(req,res,next)=>{
   let {email}=req.body;
   let findUser=await user.findOne({email});
   if(!findUser) return next(new ErrorConfig(401,"unauthorized access"));
@@ -192,7 +191,7 @@ const verifyOtp=asyncHandler(async(req:Request,res:Response,next:NextFunction)=>
     })
   }
 })
-const sendOtpAgain=asyncHandler(async(req:Request,res:Response,next:NextFunction)=>{
+const sendOtpAgain=asyncHandler(async(req,res,next)=>{
   const {email}=req.body;
   const userExist=await user.findOne({email,isVerified:false});
   if(!userExist) return next(new ErrorConfig(400,"Sorry you can't use this service"));
