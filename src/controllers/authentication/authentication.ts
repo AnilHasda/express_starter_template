@@ -6,7 +6,7 @@ import user from "../../models/authModel";
 import {UserSchema as UserData} from "../../@types/userSchema.types";
 import bcrypt from "bcryptjs";
 import generateOtp from "../../utils/generateOtp";
-import generateOtpExpirationTime from  "../../utils/generateOtp";
+import generateOtpExpirationTime from  "../../utils/generateOtpExpirationTime";
 import uploadImageIntoCloudinary from "../../services/cloudinary.service";
 import path from "path";
 import ejs from "ejs";
@@ -71,7 +71,7 @@ const userRegistration=asyncHandler(async(req,res,next)=>{
   });
   }
   if(inserData){
-    let templatePath=path.join(__dirname,"../../../views/verificationEmailTemplate.ejs");
+    let templatePath=path.join(__dirname,"../../../viewsverificationEmailTemplate.ejs");
     type Data={
       user:string;
       otpCode:string | number;
@@ -83,7 +83,7 @@ const userRegistration=asyncHandler(async(req,res,next)=>{
     ejs.renderFile(templatePath,{data},async function (err,htmlTemplate){
     if(err){
       console.log({error:err});
-      throw new Error();
+      throw new Error("failed to register user");
   }
   await sendEmail("Verification Email","Verification Email",userData.email,htmlTemplate);
     })
@@ -170,7 +170,7 @@ const verifyOtp=asyncHandler(async(req,res,next)=>{
   if(!findUser) return next(new ErrorConfig(401,"unauthorized access"));
   let verifyOtpCode=await bcrypt.compare(req.params.otpCode,findUser.otp as string);
   if(!verifyOtpCode || !findUser.otpExpiresAt) return next(new ErrorConfig(401,"Invalid code"));
-  let isOtpValid=new Date<findUser.otpExpiresAt;
+  let isOtpValid=new Date()<findUser.otpExpiresAt;
   console.log({now:new Date,otpExpires:findUser.otpExpiresAt})
   if(!isOtpValid) return next(new ErrorConfig(401,"OTP expires"));
   let verifyAccount=await user.updateOne({otp:req.params.otpCode},{$set:{...findUser,otp:undefined,otpExpiresAt:undefined,isVerified:true}});
@@ -187,9 +187,10 @@ const verifyOtp=asyncHandler(async(req,res,next)=>{
       console.log({error:err});
       throw new Error();
   }
-  await sendEmail("Verification Email","Verification Email",findUser.email,htmlTemplate);
+  await sendEmail("welcome Email","welcome Email",findUser.email,htmlTemplate);
     })
   }
+  res.json(new ResponseConfig(200,"User verified successfully"));
 })
 const sendOtpAgain=asyncHandler(async(req,res,next)=>{
   const {email}=req.body;

@@ -1,5 +1,5 @@
-const generateOtpExpirationTime=()=>{
-const expireTime=new Date(Date.now()+(2*60*1000));
+const generateOtpExpirationTime=(expirationTime=2)=>{
+const expireTime=new Date(Date.now()+expirationTime*60*1000);
 return expireTime;
 }
 export default generateOtpExpirationTime;

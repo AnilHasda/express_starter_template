@@ -15,7 +15,7 @@ async function sendEmail(subject:string,text:string,receiver_id:string,htmlTempl
   try{
   // send mail with defined transport object
   const info = await transporter.sendMail({
-    from: '"Sarkar Hasda 👻" <hasdaanil098@gmail.com>', // sender address
+    from: '"Sarkar Hasda" <hasdaanil098@gmail.com>', // sender address
     to: receiver_id, // list of receivers
     subject, // Subject line
     text, // plain text body
