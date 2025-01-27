@@ -71,7 +71,7 @@ const userRegistration=asyncHandler(async(req,res,next)=>{
   });
   }
   if(inserData){
-    let templatePath=path.join(__dirname,"../../../viewsverificationEmailTemplate.ejs");
+    let templatePath=path.join(__dirname,"../../../views/verificationEmailTemplate.ejs");
     type Data={
       user:string;
       otpCode:string | number;
@@ -173,8 +173,16 @@ const verifyOtp=asyncHandler(async(req,res,next)=>{
   let isOtpValid=new Date()<findUser.otpExpiresAt;
   console.log({now:new Date,otpExpires:findUser.otpExpiresAt})
   if(!isOtpValid) return next(new ErrorConfig(401,"OTP expires"));
-  let verifyAccount=await user.updateOne({otp:req.params.otpCode},{$set:{...findUser,otp:undefined,otpExpiresAt:undefined,isVerified:true}});
-  if(verifyAccount){
+  let updateUser=await user.updateOne(
+    {email:findUser.email},
+    {$unset:{
+      otp:"",
+      otpExpiresAt:""
+    }},
+    {$set:{isVerified:true}}
+    );
+  console.log({updateUser})
+  if(updateUser){
     let templatePath=path.join(__dirname,"../../../views/welcomeEmailTemplate.ejs");
     type Data={
       user:string;
