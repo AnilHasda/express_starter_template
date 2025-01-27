@@ -3,11 +3,11 @@ import {Schema,model} from "mongoose";
 import bcrypt from "bcryptjs";
 import {UserSchema} from "../@types/userSchema.types";
 const userSchema=new Schema<UserSchema>({
-  fname:{
+  firstname:{
     type:String,
     required:true
   },
-  lname:{
+  lastname:{
     type:String,
     required:true
   },

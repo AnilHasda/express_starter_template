@@ -1,6 +1,6 @@
 export interface UserSchema{
-  fname:string;
-  lname:string;
+  firstname:string;
+  lastname:string;
   email:string;
   password:string;
   profile?:string;

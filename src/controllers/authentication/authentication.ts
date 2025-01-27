@@ -77,7 +77,7 @@ const userRegistration=asyncHandler(async(req,res,next)=>{
       otpCode:string | number;
     }
      let data:Data={
-       user:userData.fname,
+       user:userData.firstname,
        otpCode:otp
     }
     ejs.renderFile(templatePath,{data},async function (err,htmlTemplate){
@@ -188,7 +188,7 @@ const verifyOtp=asyncHandler(async(req,res,next)=>{
       user:string;
     }
      let data:Data={
-       user:findUser.fname//findOtp contain user data
+       user:findUser.firstname//findOtp contain user data
     }
     ejs.renderFile(templatePath,{data},async function (err,htmlTemplate){
     if(err){
@@ -222,7 +222,7 @@ const sendOtpAgain=asyncHandler(async(req,res,next)=>{
       otpCode:string | number;
     }
      let data:Data={
-       user:userExist.fname,//userExist contain user data
+       user:userExist.firstname,//userExist contain user data
        otpCode:otp
     }
     ejs.renderFile(templatePath,{data},async function (err,htmlTemplate){
